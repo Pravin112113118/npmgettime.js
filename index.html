@@ -10,7 +10,7 @@
   <input id="ver" placeholder="Version (18.2.0)" />
   <button onclick="getTime()">Check</button>
 
-  <p id="result"></p>
+  <pre id="result"></pre>
 <script>
 function timeAgo(dateString) {
   const now = new Date();
@@ -49,8 +49,15 @@ function timeAgo(dateString) {
     const time = data.time?.[ver];
 
     document.getElementById("result").innerText =
-      time ? `Published ${timeAgo(time)}` : "Version not found";
-  }
+       time
+        ? JSON.stringify({
+            package: pkg,
+            version: ver,
+            published: time,
+            relative: timeAgo(time)
+          })
+        : JSON.stringify({ error: "Version not found" });
+
 
   // ✅ Add THIS PART (auto-read from URL)
   window.onload = () => {
