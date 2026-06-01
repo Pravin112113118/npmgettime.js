@@ -11,7 +11,7 @@
   <button onclick="getTime()">Check</button>
 
   <p id="result"></p>
- <script>
+<script>
   function timeAgo(dateString) {
     const now = new Date();
     const past = new Date(dateString);
@@ -35,9 +35,10 @@
     return "just now";
   }
 
-  async function getTime() {
-    const pkg = document.getElementById("pkg").value;
-    const ver = document.getElementById("ver").value;
+  async function getTime(pkg, ver) {
+    // If values not passed, read from inputs
+    if (!pkg) pkg = document.getElementById("pkg").value;
+    if (!ver) ver = document.getElementById("ver").value;
 
     document.getElementById("result").innerText = "Loading...";
 
@@ -49,6 +50,22 @@
     document.getElementById("result").innerText =
       time ? `Published ${timeAgo(time)}` : "Version not found";
   }
+
+  // ✅ Add THIS PART (auto-read from URL)
+  window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const pkg = params.get("pkg");
+    const ver = params.get("ver");
+
+    if (pkg && ver) {
+      // Fill input fields (optional UX)
+      document.getElementById("pkg").value = pkg;
+      document.getElementById("ver").value = ver;
+
+      // Auto-run
+      getTime(pkg, ver);
+    }
+  };
 </script>
 </body>
 </html>
