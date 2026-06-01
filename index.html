@@ -55,7 +55,10 @@ function timeAgo(dateString) {
         relative: timeAgo(time)
       };
 
-      document.getElementById("result").innerText = JSON.stringify(result);
+      document.getElementById("result").innerText =
+        "Published " + result.relative + "\n\n" +
+        JSON.stringify(result, null, 2);
+
     } else {
       document.getElementById("result").innerText =
         JSON.stringify({ error: "Version not found" });
