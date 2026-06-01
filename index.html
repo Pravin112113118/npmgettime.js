@@ -11,20 +11,44 @@
   <button onclick="getTime()">Check</button>
 
   <p id="result"></p>
+ <script>
+  function timeAgo(dateString) {
+    const now = new Date();
+    const past = new Date(dateString);
+    const seconds = Math.floor((now - past) / 1000);
 
-  <script>
-    async function getTime() {
-      const pkg = document.getElementById("pkg").value;
-      const ver = document.getElementById("ver").value;
+    const intervals = [
+      { label: "year", seconds: 31536000 },
+      { label: "month", seconds: 2592000 },
+      { label: "day", seconds: 86400 },
+      { label: "hour", seconds: 3600 },
+      { label: "minute", seconds: 60 }
+    ];
 
-      const res = await fetch(`https://registry.npmjs.org/${pkg}`);
-      const data = await res.json();
-
-      const time = data.time?.[ver];
-
-      document.getElementById("result").innerText =
-        time ? `Published: ${time}` : "Version not found";
+    for (const interval of intervals) {
+      const count = Math.floor(seconds / interval.seconds);
+      if (count >= 1) {
+        return `${count} ${interval.label}${count > 1 ? "s" : ""} ago`;
+      }
     }
-  </script>
+
+    return "just now";
+  }
+
+  async function getTime() {
+    const pkg = document.getElementById("pkg").value;
+    const ver = document.getElementById("ver").value;
+
+    document.getElementById("result").innerText = "Loading...";
+
+    const res = await fetch(`https://registry.npmjs.org/${pkg}`);
+    const data = await res.json();
+
+    const time = data.time?.[ver];
+
+    document.getElementById("result").innerText =
+      time ? `Published ${timeAgo(time)}` : "Version not found";
+  }
+</script>
 </body>
 </html>
