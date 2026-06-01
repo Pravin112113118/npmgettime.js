@@ -47,9 +47,14 @@ function timeAgo(dateString) {
     const data = await res.json();
 
     const time = data.time?.[ver];
-
-    document.getElementById("result").innerText = time ? `Published ${timeAgo(time)}` : "Version not found";
-  }
+    document.getElementById("result").innerText = time
+      ? JSON.stringify({
+        package: pkg,
+        version: ver,
+        published: time,
+        relative: timeAgo(time)
+        })
+      : JSON.stringify({ error: "Version not found" });
 
 
   // ✅ Add THIS PART (auto-read from URL)
