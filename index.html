@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NPM Publish Time</title>
+</head>
+<body>
+  <h2>NPM Publish Time Checker</h2>
+
+  <input id="pkg" placeholder="Package name (react)" />
+  <input id="ver" placeholder="Version (18.2.0)" />
+  <button onclick="getTime()">Check</button>
+
+  <p id="result"></p>
+
+  <script>
+    async function getTime() {
+      const pkg = document.getElementById("pkg").value;
+      const ver = document.getElementById("ver").value;
+
+      const res = await fetch(`https://registry.npmjs.org/${pkg}`);
+      const data = await res.json();
+
+      const time = data.time?.[ver];
+
+      document.getElementById("result").innerText =
+        time ? `Published: ${time}` : "Version not found";
+    }
+  </script>
+</body>
+</html>
