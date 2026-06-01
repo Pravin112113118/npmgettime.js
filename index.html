@@ -37,9 +37,6 @@ function timeAgo(dateString) {
   return "just now";
 }
   async function getTime(pkg, ver) {
-    console.log(data);
-    console.log("Version:", ver);
-    console.log("Time:", data.time?.[ver]);
     // If values not passed, read from inputs
     if (!pkg) pkg = document.getElementById("pkg").value;
     if (!ver) ver = document.getElementById("ver").value;
@@ -48,22 +45,10 @@ function timeAgo(dateString) {
 
     const res = await fetch(`https://registry.npmjs.org/${pkg}`);
     const data = await res.json();
-    const time = data.time && data.time[ver];
+    const time = data.time?.[ver];
 
-    if (time) {
-      const result = {
-        package: pkg,
-        version: ver,
-        relative: timeAgo(time)
-      };
-
-      document.getElementById("result").innerText =
-        JSON.stringify(result, null, 2);
-    } else {
-      document.getElementById("result").innerText =
-        "Version not found\n\nAvailable versions:\n" +
-         JSON.stringify(Object.keys(data.time).slice(-10), null, 2);
-    }
+    document.getElementById("result").innerText = time ? `Published ${timeAgo(time)}` : "Version not found";
+  }
 
   // ✅ Add THIS PART (auto-read from URL)
   window.onload = () => {
