@@ -45,8 +45,11 @@ function timeAgo(dateString) {
 
     const res = await fetch(`https://registry.npmjs.org/${pkg}`);
     const data = await res.json();
+    console.log(data);
+    console.log("Version:", ver);
+    console.log("Time:", data.time?.[ver]);
 
-    const time = data.time?.[ver];
+    const time = data.time && data.time[ver];
 
     if (time) {
       const result = {
@@ -55,10 +58,9 @@ function timeAgo(dateString) {
         relative: timeAgo(time)
       };
 
+      
       document.getElementById("result").innerText =
-        "Published " + result.relative + "\n\n" +
-        JSON.stringify(result, null, 2);
-
+          JSON.stringify(result);
     } else {
       document.getElementById("result").innerText =
         JSON.stringify({ error: "Version not found" });
